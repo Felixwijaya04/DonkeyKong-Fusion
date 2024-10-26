@@ -10,6 +10,14 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
+        if (PlayerPrefs.HasKey("minTime"))
+        {
+            minTime = PlayerPrefs.GetFloat("minTime");
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("minTime", minTime);
+        }
         Spawn();
     }
 

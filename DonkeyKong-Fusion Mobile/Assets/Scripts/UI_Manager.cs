@@ -4,15 +4,31 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.Audio;
 
 public class UI_Manager : MonoBehaviour
 {
-    private float level;
+    private float level = 1;
     public TextMeshProUGUI levelText;
+
+    [Header("Audio")]
+    [SerializeField] private AudioMixer myMixer;
+    [SerializeField] private Slider soundTrackSlider;
+
     private void Start()
     {
-        level = PlayerPrefs.GetFloat("Level");
-        levelText.text = level.ToString();
+        if (PlayerPrefs.HasKey("BGM"))
+        {
+            LoadVolume();
+            level = PlayerPrefs.GetFloat("Level");
+            levelText.text = level.ToString();
+        }
+        else
+        {
+            SetSoundTrackVolume();
+            levelText.text = level.ToString();
+        }
+        
     }
 
     private void Update()
@@ -34,5 +50,19 @@ public class UI_Manager : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    public void SetSoundTrackVolume()
+    {
+        float vol = soundTrackSlider.value;
+        myMixer.SetFloat("SoundTrackVol", Mathf.Log10(vol) * 20);
+        PlayerPrefs.SetFloat("BGM", vol);
+    }
+
+    private void LoadVolume()
+    {
+        soundTrackSlider.value = PlayerPrefs.GetFloat("BGM");
+
+        SetSoundTrackVolume();
     }
 }

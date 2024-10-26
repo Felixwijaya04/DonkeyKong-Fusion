@@ -11,28 +11,30 @@ public class SoundManager : MonoBehaviour
     public Sound[] BGM;
 
     public AudioSource BGMSource;
+    private int currSong;
 
     private void Awake()
     {
-        if (instance == null) { instance = this; }
+        if (instance == null) { instance = this; DontDestroyOnLoad(gameObject); } else
+        {
+            Destroy(gameObject);
+        }
     }
     void Start()
     {
         Debug.Log("start CLIP");
-        PlayBgm("Walk BGM");
+        currSong = PlayerPrefs.GetInt("Song");
+        PlayBgm(currSong);
     }
-    public void PlayBgm(string name)
+    public void PlayBgm(int index)
     {
-        int index = FindIndexByName(name, BGM);
-        if (index != -1)
+        if(index > BGM.Length)
         {
-            BGMSource.clip = BGM[index].clip;
-            BGMSource.Play();
+            index = 0;
+            PlayerPrefs.SetInt("Song", index);
         }
-        else
-        {
-            Debug.Log("No BGM name is found");
-        }
+        BGMSource.clip = BGM[index].clip;
+        BGMSource.Play();
     }
 
     private int FindIndexByName(string name, Sound[] clip)
