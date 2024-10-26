@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private SpriteRenderer spriteRenderer;
+    public Sprite[] runSprite;
+    public Sprite climbSprite;
+    private int spriteIndex;
+
     private Rigidbody2D rb;
     private Vector2 direction;
     private new Collider2D collider;
@@ -15,18 +20,35 @@ public class Player : MonoBehaviour
     [SerializeField] public float jumpStrength;
 
     private bool grounded;
+    private bool climbing;
     private void Awake()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
         results = new Collider2D[4];
+    }
+
+    private void OnEnable()
+    {
+        InvokeRepeating(nameof(AnimateSprite), 1f / 12f, 1f / 12f);
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke();
     }
 
     private void Update()
     {
         CheckCollision();
 
-        if(joystick.Direction.y > 0f && grounded)
+        if(climbing)
+        {
+            direction.y = joystick.Direction.y * moveSpeed;
+
+        }
+        else if(joystick.Direction.y > 0f && grounded)
         {
             direction = Vector2.up * jumpStrength;
         }
@@ -59,6 +81,7 @@ public class Player : MonoBehaviour
     private void CheckCollision()
     {
         grounded = false;
+        climbing = false;
 
         Vector2 size = collider.bounds.size;
         size.y += 0.1f;
@@ -70,10 +93,49 @@ public class Player : MonoBehaviour
         {
             GameObject hit = results[i].gameObject;
 
-            if(hit.layer == LayerMask.NameToLayer("Ground"))
+            if (hit.layer == LayerMask.NameToLayer("Ground"))
             {
                 grounded = hit.transform.position.y < transform.position.y - 0.5f;
+
+                Physics2D.IgnoreCollision(collider, results[i], !grounded);
             }
+            else if (hit.layer == LayerMask.NameToLayer("Ladder"))
+            {
+                climbing = true;
+            }
+        }
+    }
+
+    private void AnimateSprite()
+    {
+        if(climbing)
+        {
+            spriteRenderer.sprite = climbSprite;
+        }
+        else if(direction.x != 0f)
+        {
+            spriteIndex++;
+
+            if(spriteIndex >= results.Length)
+            {
+                spriteIndex = 0;
+            }
+
+            spriteRenderer.sprite = runSprite[spriteIndex];
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Obstacle"))
+        {
+            enabled = false;
+            FindObjectOfType<GameManager>().LevelFailed();
+        }
+        else if (collision.gameObject.CompareTag("Objective"))
+        {
+            enabled = false;
+            FindObjectOfType<GameManager>().LevelComplete();
         }
     }
 }

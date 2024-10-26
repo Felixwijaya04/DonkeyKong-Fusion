@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7613719247052441158}
   - component: {fileID: 2230775614965138701}
   - component: {fileID: -1169952009843345226}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mario
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -161,3 +161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 597de9adcb1355e43a0c7ae375f1d4b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runSprite: []
+  climbSprite: {fileID: 0}
+  joystick: {fileID: 0}
+  moveSpeed: 0
+  jumpStrength: 0
