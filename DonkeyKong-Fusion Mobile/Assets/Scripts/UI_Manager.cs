@@ -17,7 +17,7 @@ public class UI_Manager : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("BGM"))
+        if (PlayerPrefs.HasKey("BGM") || PlayerPrefs.HasKey("Level"))
         {
             LoadVolume();
             level = PlayerPrefs.GetFloat("Level");

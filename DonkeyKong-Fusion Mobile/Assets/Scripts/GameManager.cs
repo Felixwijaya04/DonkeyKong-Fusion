@@ -45,10 +45,10 @@ public class GameManager : MonoBehaviour
         {
             // Increase barrel spawn rate
             Spawner spawner = FindObjectOfType<Spawner>();
-            if (spawner != null && spawner.minTime < spawner.maxTime - 0.3f && !hasIncreasedSpawner)
+            if (spawner != null && spawner.minTime > 0f && !hasIncreasedSpawner)
             {
                 hasIncreasedSpawner = true;
-                spawner.minTime += 0.3f;
+                spawner.minTime -= 0.15f;
                 PlayerPrefs.SetFloat("minTime", spawner.minTime);
                 Debug.Log("Barrel Spawn Increased: " + spawner.minTime);
             }
