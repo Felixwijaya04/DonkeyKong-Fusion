@@ -137,5 +137,10 @@ public class Player : MonoBehaviour
             enabled = false;
             FindObjectOfType<GameManager>().LevelComplete();
         }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
+        {
+            enabled = false;
+            FindObjectOfType<GameManager>().LevelFailed();
+        }
     }
 }

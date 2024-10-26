@@ -18,5 +18,9 @@ public class Barrel : MonoBehaviour
         {
             rb.AddForce(collision.transform.right * speed, ForceMode2D.Impulse);
         }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

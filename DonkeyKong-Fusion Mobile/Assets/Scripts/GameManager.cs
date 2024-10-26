@@ -6,10 +6,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private bool alive;
-    private float level = 3;
+    private float level = 1;
     private int windSpeed;
+    private bool hasIncreasedWInd;
 
     public GameObject wind;
+    private AreaEffector2D effector;
 
     private void Start()
     {
@@ -18,15 +20,19 @@ public class GameManager : MonoBehaviour
         if (PlayerPrefs.HasKey("Level"))
         {
             // load level data if exist
-            level = PlayerPrefs.GetFloat("Level");   
+            level = PlayerPrefs.GetFloat("Level");
         }
+        else
+        {
+            PlayerPrefs.SetFloat("Level", level);
+        }
+
+        effector = wind.gameObject.GetComponent<AreaEffector2D>();
+        hasIncreasedWInd = false;
     }
 
-    public void LevelComplete()
+    private void Update()
     {
-        // save the level
-        level++;
-        PlayerPrefs.SetFloat("Level", level);
         if (level % 2 == 0)
         {
             // Increase barrel spawn rate
@@ -36,13 +42,26 @@ public class GameManager : MonoBehaviour
                 spawner.minTime += 0.1f;
                 Debug.Log("Barrel Spawn Increased: " + spawner.minTime);
             }
-        } else if(level % 3 == 0)
+        }
+        if (level % 3 == 0)
         {
             // activate wind
             ActivateWind();
         }
+        else
+        {
+            wind.SetActive(false);
+            hasIncreasedWInd = false;
+        }
+        
+    }
 
-        // reload scene with the new level
+    public void LevelComplete()
+    {
+        // save the level
+        level++;
+        PlayerPrefs.SetFloat("Level", level);
+        hasIncreasedWInd = false;
         SceneManager.LoadScene("GameScene");
     }
 
@@ -63,6 +82,11 @@ public class GameManager : MonoBehaviour
 
     public void ActivateWind()
     {
+        if(effector.forceMagnitude < 55 && !hasIncreasedWInd)
+        {
+            effector.forceMagnitude += 1.5f;
+            hasIncreasedWInd = true;
+        }
         wind.SetActive(true);
     }
 }
