@@ -35,7 +35,7 @@ public class UI_Manager : MonoBehaviour
     {
         level = PlayerPrefs.GetFloat("Level");
         levelText.text = level.ToString();   
-        Debug.Log(level);
+        //Debug.Log(level);
     }
 
     public void PauseGame()
@@ -70,5 +70,10 @@ public class UI_Manager : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
+    }
+
+    public void ReloadGame()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }

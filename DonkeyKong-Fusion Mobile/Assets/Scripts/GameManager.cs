@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     private bool alive;
     private float level = 1;
+    private float previousLevel;
 
     private bool hasIncreasedSpawner;
     private bool hasIncreasedWind;
@@ -17,31 +18,17 @@ public class GameManager : MonoBehaviour
 
     private static GameManager instance;
 
-    private void Awake()
+    private void Start()
     {
-        // Check if an instance of this script already exists
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Initialize();
-    }
-
-    private void Initialize()
-    {
+        previousLevel = level;
+        DontDestroyOnLoad(gameObject);
         effector = wind.gameObject.GetComponent<AreaEffector2D>();
         hasIncreasedWind = false;
         hasIncreasedSpawner = false;
 
         if (PlayerPrefs.HasKey("Level"))
         {
-            // Load level data if it exists
+            // load level data if exist
             level = PlayerPrefs.GetFloat("Level");
             currSong = PlayerPrefs.GetInt("Song");
             effector.forceMagnitude = PlayerPrefs.GetFloat("windSpeed");
@@ -53,32 +40,74 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetFloat("windSpeed", effector.forceMagnitude);
         }
     }
+    //private void Awake()
+    //{
+    //    // Check if an instance of this script already exists
+    //    if (instance == null)
+    //    {
+    //        instance = this;
+    //        DontDestroyOnLoad(gameObject);
+
+    //    }
+    //    else if (instance != this)
+    //    {
+    //        Destroy(gameObject);
+    //        return;
+    //    }
+    //    Initialize();
+    //}
+
+    //private void Initialize()
+    //{
+    //    effector = wind.gameObject.GetComponent<AreaEffector2D>();
+    //    hasIncreasedWind = false;
+    //    hasIncreasedSpawner = false;
+
+    //    if (PlayerPrefs.HasKey("Level"))
+    //    {
+    //        // Load level data if it exists
+    //        level = PlayerPrefs.GetFloat("Level");
+    //        currSong = PlayerPrefs.GetInt("Song");
+    //        effector.forceMagnitude = PlayerPrefs.GetFloat("windSpeed");
+    //    }
+    //    else
+    //    {
+    //        PlayerPrefs.SetFloat("Level", level);
+    //        PlayerPrefs.SetInt("Song", currSong);
+    //        PlayerPrefs.SetFloat("windSpeed", effector.forceMagnitude);
+    //    }
+    //}
 
     private void Update()
     {
-        if (level % 2 == 0)
+        if(level != previousLevel)
         {
-            // Increase barrel spawn rate
-            Spawner spawner = FindObjectOfType<Spawner>();
-            if (spawner != null && spawner.minTime > 0f && !hasIncreasedSpawner)
+            Debug.Log(level);
+            if (level % 2 == 0)
             {
-                hasIncreasedSpawner = true;
-                spawner.minTime -= 0.15f;
-                PlayerPrefs.SetFloat("minTime", spawner.minTime);
-                Debug.Log("Barrel Spawn Increased: " + spawner.minTime);
+                // Increase barrel spawn rate
+                Spawner spawner = FindObjectOfType<Spawner>();
+                if (spawner != null && spawner.minTime > 0f && !hasIncreasedSpawner)
+                {
+                    hasIncreasedSpawner = true;
+                    spawner.minTime -= 0.15f;
+                    PlayerPrefs.SetFloat("minTime", spawner.minTime);
+                    Debug.Log("Barrel Spawn Increased: " + spawner.minTime);
+                }
             }
-        }
-        if (level % 3 == 0)
-        {
-            // activate wind
-            ActivateWind();
-        }
-        else
-        {
-            wind.SetActive(false);
-            hasIncreasedWind = false;
-        }
-        
+            if (level % 3 == 0)
+            {
+                // activate wind
+                ActivateWind();
+                Debug.Log("wind activated");
+            }
+            else
+            {
+                wind.SetActive(false);
+                hasIncreasedWind = false;
+            }
+            previousLevel = level;
+        } 
     }
 
     public void LevelComplete()
