@@ -9,22 +9,39 @@ public class GameManager : MonoBehaviour
     private float level = 1;
 
     private bool hasIncreasedSpawner;
-    private bool hasIncreasedWInd;
+    private bool hasIncreasedWind;
 
     public GameObject wind;
     private AreaEffector2D effector;
     private int currSong = 0;
 
-    private void Start()
+    private static GameManager instance;
+
+    private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        // Check if an instance of this script already exists
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         effector = wind.gameObject.GetComponent<AreaEffector2D>();
-        hasIncreasedWInd = false;
+        hasIncreasedWind = false;
         hasIncreasedSpawner = false;
 
         if (PlayerPrefs.HasKey("Level"))
         {
-            // load level data if exist
+            // Load level data if it exists
             level = PlayerPrefs.GetFloat("Level");
             currSong = PlayerPrefs.GetInt("Song");
             effector.forceMagnitude = PlayerPrefs.GetFloat("windSpeed");
@@ -33,10 +50,8 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetFloat("Level", level);
             PlayerPrefs.SetInt("Song", currSong);
-            PlayerPrefs.SetFloat("windSpeed",effector.forceMagnitude);
+            PlayerPrefs.SetFloat("windSpeed", effector.forceMagnitude);
         }
-
-        
     }
 
     private void Update()
@@ -61,7 +76,7 @@ public class GameManager : MonoBehaviour
         else
         {
             wind.SetActive(false);
-            hasIncreasedWInd = false;
+            hasIncreasedWind = false;
         }
         
     }
@@ -74,7 +89,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat("Level", level);
         PlayerPrefs.SetInt("Song", currSong);
 
-        hasIncreasedWInd = false;
+        hasIncreasedWind = false;
         hasIncreasedSpawner = false;
         SceneManager.LoadScene("GameScene");
     }
@@ -96,11 +111,11 @@ public class GameManager : MonoBehaviour
 
     public void ActivateWind()
     {
-        if(effector.forceMagnitude < 55 && !hasIncreasedWInd)
+        if(effector.forceMagnitude < 60 && !hasIncreasedWind)
         {
             effector.forceMagnitude += 1.5f;
             PlayerPrefs.SetFloat("windSpeed", effector.forceMagnitude);
-            hasIncreasedWInd = true;
+            hasIncreasedWind = true;
         }
         wind.SetActive(true);
     }
