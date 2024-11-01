@@ -90,12 +90,6 @@ public class GameManager : MonoBehaviour
 
         if (alive == false)
         {
-            // reload curr level
-            //PlayerPrefs.DeleteKey("Level");
-            //PlayerPrefs.DeleteKey("Song");
-            //PlayerPrefs.DeleteKey("windSpeed");
-            //PlayerPrefs.DeleteKey("minTime");
-            //PlayerPrefs.DeleteKey("BGM");
             level = 1;
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
