@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviour
     private AreaEffector2D effector;
     private int currSong = 0;
 
-    private static GameManager instance;
-
     private void Start()
     {
         previousLevel = level;
@@ -93,6 +91,14 @@ public class GameManager : MonoBehaviour
         if (alive == false)
         {
             // reload curr level
+            //PlayerPrefs.DeleteKey("Level");
+            //PlayerPrefs.DeleteKey("Song");
+            //PlayerPrefs.DeleteKey("windSpeed");
+            //PlayerPrefs.DeleteKey("minTime");
+            //PlayerPrefs.DeleteKey("BGM");
+            level = 1;
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
             SceneManager.LoadScene("GameScene");
         }
         else
@@ -103,7 +109,7 @@ public class GameManager : MonoBehaviour
 
     public void ActivateWind()
     {
-        if(effector.forceMagnitude < 60 && !hasIncreasedWind)
+        if(effector.forceMagnitude < 66 && !hasIncreasedWind)
         {
             effector.forceMagnitude += 1.5f;
             PlayerPrefs.SetFloat("windSpeed", effector.forceMagnitude);
