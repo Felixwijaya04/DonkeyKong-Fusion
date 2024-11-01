@@ -40,43 +40,6 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetFloat("windSpeed", effector.forceMagnitude);
         }
     }
-    //private void Awake()
-    //{
-    //    // Check if an instance of this script already exists
-    //    if (instance == null)
-    //    {
-    //        instance = this;
-    //        DontDestroyOnLoad(gameObject);
-
-    //    }
-    //    else if (instance != this)
-    //    {
-    //        Destroy(gameObject);
-    //        return;
-    //    }
-    //    Initialize();
-    //}
-
-    //private void Initialize()
-    //{
-    //    effector = wind.gameObject.GetComponent<AreaEffector2D>();
-    //    hasIncreasedWind = false;
-    //    hasIncreasedSpawner = false;
-
-    //    if (PlayerPrefs.HasKey("Level"))
-    //    {
-    //        // Load level data if it exists
-    //        level = PlayerPrefs.GetFloat("Level");
-    //        currSong = PlayerPrefs.GetInt("Song");
-    //        effector.forceMagnitude = PlayerPrefs.GetFloat("windSpeed");
-    //    }
-    //    else
-    //    {
-    //        PlayerPrefs.SetFloat("Level", level);
-    //        PlayerPrefs.SetInt("Song", currSong);
-    //        PlayerPrefs.SetFloat("windSpeed", effector.forceMagnitude);
-    //    }
-    //}
 
     private void Update()
     {

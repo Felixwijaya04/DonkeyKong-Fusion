@@ -66,12 +66,6 @@ public class UI_Manager : MonoBehaviour
         SetSoundTrackVolume();
     }
 
-    public void ClearSaveData()
-    {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-    }
-
     public void ReloadGame()
     {
         SceneManager.LoadScene("GameScene");
