@@ -17,18 +17,21 @@ public class UI_Manager : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("BGM") || PlayerPrefs.HasKey("Level"))
+        if (PlayerPrefs.HasKey("Level"))
         {
             LoadVolume();
             level = PlayerPrefs.GetFloat("Level");
-            levelText.text = level.ToString();
+            
         }
         else
         {
+            // somehow ini ngereset wind ny jd 0 pas lv 3
+            //PlayerPrefs.SetFloat("Level", level);  // Save default level (1) if not set
+            //PlayerPrefs.Save();
             SetSoundTrackVolume();
-            levelText.text = level.ToString();
+            
         }
-        
+        levelText.text = level.ToString();
     }
 
     private void Update()
